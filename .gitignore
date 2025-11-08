@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 applications.csv
-
+steam_games_cleaned.csv
 # Distribution / packaging
 .Python
 build/
