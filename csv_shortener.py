@@ -10,10 +10,12 @@ def has_english(lang_str):
     if not isinstance(lang_str, str):
         return False
     # Remove HTML tags
-    clean = re.sub(r"<.*?>", "", lang_str).lower()
-    # Split by comma and strip spaces
-    langs = [l.strip() for l in clean.split(",")]
-    return "english" in langs
+    clean = re.sub(r"<.*?>", "", lang_str)
+    # Lowercase and remove extra symbols
+    clean = clean.lower()
+    clean = re.sub(r"[\*\-]", "", clean)  # remove asterisks and dashes
+    # Check if 'english' appears anywhere
+    return "english" in clean
 
 def main():
     # Load your dataset
@@ -46,7 +48,8 @@ def main():
     )
     avg_reviews["percent_positive"] *= 100
     
-    merged_list = df.merge(avg_reviews, on="appid", how="inner")
+    merged_list = df.merge(avg_reviews, on="appid", how="left")
+    merged_list["percent_positive"].fillna(50, inplace=True)
     # 4. Save the cleaned dataset
     #df.to_csv("steam_games_cleaned.csv", index=False)
     merged_list.to_csv("steam_games_cleaned.csv", index=False)
