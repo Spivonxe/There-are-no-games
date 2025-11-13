@@ -2,6 +2,8 @@ import pandas as pd
 import subprocess
 import re
 
+#This program was written with partial assistance from chatgpt
+
 def has_english(lang_str):
     """
     Returns True if 'English' appears in the supported_languages string.
@@ -18,22 +20,14 @@ def has_english(lang_str):
     return "english" in clean
 
 def main():
-    # Load your dataset
     df = pd.read_csv("applications.csv", low_memory=False)
 
-    # 1. Keep only games (exclude demos, DLC, software, etc.)
-    # Make sure the "type" column is lowercase / consistent
     df = df[df["type"].str.lower() == "game"]
 
-    # Optional: remove rows where name/description are missing
     df = df.dropna(subset=["name", "short_description"])
 
-    #df = df[df["supported_languages"].apply(has_english)].copy()
-
-    # 2. Keep only the columns you care about
     df = df[["appid", "name", "short_description"]]
 
-    # 3. (Optional) clean text a little
     df["short_description"] = df["short_description"].str.strip()
 
     subprocess.run(["python3", "reviews_cleaner_upper.py"], check=True)
@@ -50,8 +44,6 @@ def main():
     
     merged_list = df.merge(avg_reviews, on="appid", how="left")
     merged_list["percent_positive"].fillna(50, inplace=True)
-    # 4. Save the cleaned dataset
-    #df.to_csv("steam_games_cleaned.csv", index=False)
     merged_list.to_csv("steam_games_cleaned.csv", index=False)
 
 if __name__ == "__main__":

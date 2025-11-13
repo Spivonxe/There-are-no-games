@@ -1,6 +1,12 @@
 import csv
 import sys
 
+#
+#This part was written by copilot
+#
+#
+
+
 #!/usr/bin/env python3
 
 IN_FILE = "reviews.csv"
