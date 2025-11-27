@@ -15,10 +15,6 @@ OUT_FILE = "different.csv"
 REQUIRED_COLS = [
     "recommendationid",
     "appid",
-    "author_num_reviews",
-    "author_playtime_forever",
-    "language",
-    "review_text",
     "voted_up",  # take the first occurrence of this column name
 ]
 
@@ -67,23 +63,10 @@ def main(in_file=IN_FILE, out_file=OUT_FILE):
             # extract values
             rec_id = row[idx_map["recommendationid"]].strip()
             appid = row[idx_map["appid"]].strip()
-            num_reviews_s = row[idx_map["author_num_reviews"]].strip()
-            playtime_s = row[idx_map["author_playtime_forever"]].strip()
-            language = row[idx_map["language"]].strip().lower()
-            review_text = row[idx_map["review_text"]].strip()
             voted_up = row[idx_map["voted_up"]].strip()
 
-            # filters
-            num_reviews = to_int_or_none(num_reviews_s)
-            playtime = to_int_or_none(playtime_s)
-            if num_reviews is None or playtime is None:
-                continue
-            if num_reviews < 4 or playtime < 4:
-                continue
-            if language != "english":
-                continue
 
-            writer.writerow([rec_id, appid, str(num_reviews), str(playtime), "english",review_text, voted_up])
+            writer.writerow([rec_id, appid, voted_up])
 
 if __name__ == "__main__":
     # optional: allow passing filenames as args

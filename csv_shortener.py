@@ -28,6 +28,7 @@ def main():
 
     df = df[["appid", "name", "short_description"]]
 
+    df["name"] = df["name"].str.strip()
     df["short_description"] = df["short_description"].str.strip()
 
     subprocess.run(["python3", "reviews_cleaner_upper.py"], check=True)
@@ -42,7 +43,7 @@ def main():
     )
     
     merged_list = df.merge(avg_reviews, on="appid", how="left")
-    merged_list["percent_positive"] = merged_list["percent_positive"].fillna(50)
+    merged_list["percent_positive"] = merged_list["percent_positive"].fillna(0.5)
     merged_list.to_csv("steam_games_cleaned.csv", index=False)
 
 if __name__ == "__main__":
