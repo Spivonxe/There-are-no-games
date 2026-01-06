@@ -10,6 +10,9 @@ applications.csv
 steam_games_cleaned.csv
 *.pt
 *.pt.tar
+*.tar
+*.csv
+*.zip
 # Distribution / packaging
 .Python
 build/

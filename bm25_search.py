@@ -1,6 +1,7 @@
 from opensearchpy import OpenSearch, helpers
 import os
 from dotenv import load_dotenv
+import pandas as pd 
 
 # ----------------------------
 # Opensearch
@@ -9,7 +10,7 @@ from dotenv import load_dotenv
 host = 'localhost'
 port = 9200
 INDEX_NAME = "steam_bm25"
-
+NUM_RESULTS_PER_GAME=5
 # Create the osearch with SSL/TLS enabled, but hostname verification disabled.
 
 
@@ -49,9 +50,22 @@ def bm25_search(query, size=10):
 
     return results
 
-if __name__ == "__main__":
-    print("\nSample query:")
-    results = bm25_search("GOTY")
+#print("\nSample query:")
+#results = bm25_search("underwater base builder")
 
-    for r in results:
-        print(f"{r['name']} (appid={r['appid']}, score={r['score']:.2f})")
+# for r in results:
+#     print(f"{r['name']} (appid={r['appid']}, score={r['score']:.2f})")
+
+def main(input_csv, output_csv):
+    queries = pd.read_csv(output_csv)
+    results = []
+    for query in queries['query']:
+        top_games = bm25_search(query, size=NUM_RESULTS_PER_GAME)
+        
+        results.append(", ".join([game['name'] for game in top_games]))
+
+    queries['results_bm25'] = results
+    queries.to_csv(output_csv, index=False)
+
+if __name__ == "__main__":
+    main()

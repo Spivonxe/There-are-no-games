@@ -43,28 +43,44 @@ def splade_encode(texts):
 #     # return top k
 #     return sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
 
-query = "underwater base builder"
-q_vec = splade_encode(query)
-col_idx = torch.tensor(list(q_vec.keys()), dtype=torch.long)
-row_idx = torch.zeros(len(col_idx), dtype=torch.long)
+#query = "underwater base builder"
+def main(input_csv, output_csv, game_csv):
+    queries = pd.read_csv(output_csv)
+    #query = "underwater base builder"
+    results = []
+    game_names = pd.read_csv(game_csv)
+    for query in queries['query']:
+        q_vec = splade_encode(query)
+        col_idx = torch.tensor(list(q_vec.keys()), dtype=torch.long)
+        row_idx = torch.zeros(len(col_idx), dtype=torch.long)
 
-query_indices = torch.stack([row_idx, col_idx])
+        query_indices = torch.stack([row_idx, col_idx])
 
-query_values = torch.FloatTensor(list(q_vec.values()))
+        query_values = torch.FloatTensor(list(q_vec.values()))
 
-query_splade = torch.sparse_coo_tensor(query_indices,query_values,(1,vocab_size))
-scores = torch.sparse.mm(doc_matrix,query_splade.T).coalesce()
-scores = scores.to_dense().squeeze()
-top_scores,top_index = torch.topk(scores.squeeze(),k=TOP_K)
+        query_splade = torch.sparse_coo_tensor(query_indices,query_values,(1,vocab_size))
+        scores = torch.sparse.mm(doc_matrix,query_splade.T).coalesce()
+        scores = scores.to_dense().squeeze()
+        top_scores,top_index = torch.topk(scores.squeeze(),k=TOP_K)
 
-df = pd.read_csv("steam_games_cleaned.csv")
-for i, score in zip(top_index, top_scores):
-    doc_id = doc_ids[i]
-    print(f"{doc_id} -> {score.item():.4f}")
+        top_games = []
+        for i, score in zip(top_index, top_scores):
+            doc_id = doc_ids[i]
+            print(f"{doc_id} -> {score.item():.4f}")
 
-    game_name = df.loc[df['appid'] == int(doc_id), "name"].values
-    if len(game_name) > 0:
-        game_name = game_name[0]
-    else:
-        game_name = "UNKNOWN"
-    print(game_name)
+            game_name = game_names.loc[game_names['appid'] == int(doc_id), "name"].values
+            if len(game_name) > 0:
+                top_games.append(game_name[0])
+            else:
+                top_games.append("UNKNOWN")
+            print(game_name)
+
+        results.append(", ".join(top_games))
+        print(query)
+
+    queries['results_fine_tuned'] = results
+
+    queries.to_csv(output_csv, index=False)
+
+if __name__ == "__main__":
+    main()
