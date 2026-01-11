@@ -45,7 +45,7 @@ def splade_encode(texts):
 
 #query = "underwater base builder"
 def main(input_csv, output_csv, game_csv):
-    queries = pd.read_csv(output_csv)
+    queries = pd.read_csv(input_csv)
     #query = "underwater base builder"
     results = []
     game_names = pd.read_csv(game_csv)
@@ -83,4 +83,4 @@ def main(input_csv, output_csv, game_csv):
     queries.to_csv(output_csv, index=False)
 
 if __name__ == "__main__":
-    main()
+    main("queries.csv", "queries_with_results.csv", "steam_games_cleaned.csv")

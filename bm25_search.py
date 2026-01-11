@@ -57,7 +57,7 @@ def bm25_search(query, size=10):
 #     print(f"{r['name']} (appid={r['appid']}, score={r['score']:.2f})")
 
 def main(input_csv, output_csv):
-    queries = pd.read_csv(output_csv)
+    queries = pd.read_csv(input_csv)
     results = []
     for query in queries['query']:
         top_games = bm25_search(query, size=NUM_RESULTS_PER_GAME)

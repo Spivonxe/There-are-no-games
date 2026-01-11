@@ -83,4 +83,4 @@ def main(input_csv, output_csv, game_csv):
     queries.to_csv(output_csv, index=False)
 
 if __name__ == "__main__":
-    main()
+    main("queries.csv", "queries_with_results.csv", "steam_games_cleaned.csv")
