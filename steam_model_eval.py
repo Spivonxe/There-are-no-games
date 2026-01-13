@@ -119,5 +119,5 @@ print_results("DEFAULT SPLADEV3", results)
 print_results("Custom Finetuned Splade v3", custom_results)
 evaluator.store_metrics_in_model_card_data(model,custom_results)
 
-model.save_pretrained("models/There-Are-No-Games")
-model.push_to_hub("mazombieme/There-Are-No-Games", commit_message="Update model card with evaluation metrics", exist_ok=True)
+#model.save_pretrained("models/There-Are-No-Games")
+#model.push_to_hub("mazombieme/There-Are-No-Games", commit_message="Update model card with evaluation metrics", exist_ok=True)
