@@ -18,13 +18,13 @@ To test the BM25 retrieval use the query_runner.py script and set the BM25_SET_U
 To just test the BM25 retrieval use the `bm25_search.py` file and provide a csv file containing the queries and a csv file for outputs.
 
 ## Without BM25
-If `BM25_SET_UP` is set to 0 the query_runner will only run the splade models.
+If `BM25_SET_UP` is set to 0 the query_runner will only run the splade models, assuming SPLADE_LOCAL is set to 1. 
 
 
 ## Splade
 
 To run the splade models a hugging face account is required. 
-Please set a hugging face token with the  ```hf auth login´´´ command.
+Please set a hugging face token with the  ```hf auth login´´´ command. When using query_runner.py to test on BM25 and running the splade tests on Google Colab set SPLADE_LOCAL to 0. If running it locally set it to 1.
 
 ### Using provided encodings
 
@@ -49,8 +49,7 @@ To calculate some metrics from the manual grading, use one of the `manual_eval_*
 
 
 # Links
-dataset
-base encoding
-fine_tuned encoding
-model on huggingface
-our queries
+[dataset](https://huggingface.co/datasets/mazombieme/There-Are-No-Games-Dataset-Encodings/resolve/main/steam_games_cleaned.csv)
+[base encoding](https://huggingface.co/datasets/mazombieme/There-Are-No-Games-Dataset-Encodings/resolve/main/splade_doc_matrix.pt)
+[fine_tuned encoding](https://huggingface.co/datasets/mazombieme/There-Are-No-Games-Dataset-Encodings/resolve/main/custom_doc_matrix.pt)
+[Model on Huggingface](https://huggingface.co/mazombieme/There-Are-No-Games)
