@@ -5,7 +5,7 @@ import math
 # written with chatgpt
 
 # Load data
-df = pd.read_csv("manual_eval_spladev3.csv")
+df = pd.read_csv("manual_eval_finetuned.csv")
 
 grade_cols = [f"game {i} grade" for i in range(1, 6)]
 
