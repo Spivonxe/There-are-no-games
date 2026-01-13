@@ -9,8 +9,8 @@ GAME_CSV = "steam_games_cleaned.csv"
 BM25_SET_UP=1
 
 def main():
-    # splade_base_retrieval.main(INPUT_CSV, OUTPUT_CSV,GAME_CSV)
-    # splade_finetuned_retrieval.main(OUTPUT_CSV, OUTPUT_CSV,GAME_CSV)
+    splade_base_retrieval.main(INPUT_CSV, OUTPUT_CSV,GAME_CSV)
+    splade_finetuned_retrieval.main(OUTPUT_CSV, OUTPUT_CSV,GAME_CSV)
     if(BM25_SET_UP):
         bm25_search.main(INPUT_CSV, OUTPUT_CSV)
 
