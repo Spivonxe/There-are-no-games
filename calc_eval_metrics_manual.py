@@ -72,8 +72,8 @@ for _, row in df.iterrows():
 # Print results
 # -----------------------------
 
-print(f"Precision@5: {np.mean(precisions):.3f}")
 print(f"Failure rate: {np.mean(failures):.3f}")
+print(f"Precision@5: {np.mean(precisions):.3f}")
 print(f"nDCG@5: {np.mean(ndcgs):.3f}")
 print(f"MAP@5: {np.mean(maps):.3f}")
-print(f"MRR: {np.mean(mrrs):.3f}")
+print(f"MRR@5: {np.mean(mrrs):.3f}")
