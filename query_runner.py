@@ -2,7 +2,7 @@ import splade_base_retrieval
 import bm25_search
 import splade_finetuned_retrieval
 
-INPUT_CSV = "queries.csv"
+INPUT_CSV = "input_queries.csv"
 OUTPUT_CSV = "queries_with_results.csv"
 GAME_CSV = "steam_games_cleaned.csv"
 
