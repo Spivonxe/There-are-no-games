@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import math
 
+# written with chatgpt
+
 # Load data
 df = pd.read_csv("manual_query_export.csv")
 
