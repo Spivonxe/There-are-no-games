@@ -5,7 +5,7 @@ import math
 # written with chatgpt
 
 # Load data
-df = pd.read_csv("manual_query_export.csv")
+df = pd.read_csv("manual_eval_spladev3.csv")
 
 grade_cols = [f"game {i} grade" for i in range(1, 6)]
 
@@ -14,8 +14,8 @@ grade_cols = [f"game {i} grade" for i in range(1, 6)]
 # -----------------------------
 
 def binarize(grades):
-    """Convert grades: 1,2 -> 1 ; 0 -> 0"""
-    return [1 if g > 0 else 0 for g in grades]
+    """Convert grades: 1,2 -> 1 ; 0 -> 0 ; ignore NaN"""
+    return [1 if g > 0 else 0 for g in grades if not pd.isna(g)]
 
 def dcg(grades):
     return sum(
@@ -24,6 +24,8 @@ def dcg(grades):
     )
 
 def ndcg(grades):
+    if len(grades) == 0:
+        return 0.0
     ideal = sorted(grades, reverse=True)
     idcg = dcg(ideal)
     return dcg(grades) / idcg if idcg > 0 else 0.0
@@ -54,16 +56,22 @@ maps = []
 mrrs = []
 
 for _, row in df.iterrows():
-    grades = [row[c] for c in grade_cols]
+    # Extract judged grades only (ignore NaN)
+    grades = [row[c] for c in grade_cols if not pd.isna(row[c])]
+
+    if len(grades) == 0:
+        # Skip queries with no judgments at all
+        continue
+
     binary = binarize(grades)
 
-    # Precision@5
-    precisions.append(sum(binary) / 5)
+    # Precision@k (k = number of judged results)
+    precisions.append(sum(binary) / len(binary))
 
-    # Failure: at least one 0-grade result
+    # Failure: at least one judged result has grade 0
     failures.append(1 if 0 in grades else 0)
 
-    # Ranking metrics
+    # Ranking metrics (on judged prefix only)
     ndcgs.append(ndcg(grades))
     maps.append(average_precision(binary))
     mrrs.append(reciprocal_rank(binary))
@@ -72,8 +80,8 @@ for _, row in df.iterrows():
 # Print results
 # -----------------------------
 
-print(f"Failure rate: {np.mean(failures):.3f}")
-print(f"Precision@5: {np.mean(precisions):.3f}")
-print(f"nDCG@5: {np.mean(ndcgs):.3f}")
-print(f"MAP@5: {np.mean(maps):.3f}")
-print(f"MRR@5: {np.mean(mrrs):.3f}")
+print(f"# Precision (judged only): {np.mean(precisions):.3f}")
+print(f"# Failure rate (judged only): {np.mean(failures):.3f}")
+print(f"# nDCG@5 (judged prefix): {np.mean(ndcgs):.3f}")
+print(f"# MAP@5 (judged prefix): {np.mean(maps):.3f}")
+print(f"# MRR@5 (judged prefix): {np.mean(mrrs):.3f}")
